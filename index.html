@@ -26,7 +26,6 @@
     <script>
         const canvas = document.getElementById('gameCanvas');
         const ctx = canvas.getContext('2d');
-        resizeCanvas();
 
         let rocket = {
             x: canvas.width / 2,
@@ -39,12 +38,13 @@
             targetY: canvas.height / 2
         };
 
-        window.addEventListener('resize', resizeCanvas);
-        canvas.addEventListener('click', setRocketTarget);
-
         function resizeCanvas() {
             canvas.width = window.innerWidth;
             canvas.height = window.innerHeight;
+            rocket.x = canvas.width / 2;
+            rocket.y = canvas.height / 2;
+            rocket.targetX = canvas.width / 2;
+            rocket.targetY = canvas.height / 2;
             drawRocket();
         }
 
@@ -68,7 +68,7 @@
             let dx = rocket.targetX - rocket.x;
             let dy = rocket.targetY - rocket.y;
             let distance = Math.sqrt(dx * dx + dy * dy);
-            
+
             if (distance > rocket.speed) {
                 rocket.x += dx / distance * rocket.speed;
                 rocket.y += dy / distance * rocket.speed;
@@ -81,6 +81,10 @@
             requestAnimationFrame(moveRocket);
         }
 
+        window.addEventListener('resize', resizeCanvas);
+        canvas.addEventListener('click', setRocketTarget);
+
+        resizeCanvas();
         moveRocket();
     </script>
 </body>
