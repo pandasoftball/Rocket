@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rocket Game</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: radial-gradient(circle, red, orange, yellow, green, blue, indigo, violet);
+        }
+        canvas {
+            border: 5px solid pink;
+            display: block;
+            background: white;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="gameCanvas"></canvas>
+    <script>
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+        resizeCanvas();
+
+        let rocket = {
+            x: canvas.width / 2,
+            y: canvas.height / 2,
+            width: 30,
+            height: 60,
+            color: 'green',
+            speed: 5,
+            targetX: canvas.width / 2,
+            targetY: canvas.height / 2
+        };
+
+        window.addEventListener('resize', resizeCanvas);
+        canvas.addEventListener('click', setRocketTarget);
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            drawRocket();
+        }
+
+        function drawRocket() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = rocket.color;
+            ctx.beginPath();
+            ctx.moveTo(rocket.x, rocket.y);
+            ctx.lineTo(rocket.x - rocket.width / 2, rocket.y + rocket.height);
+            ctx.lineTo(rocket.x + rocket.width / 2, rocket.y + rocket.height);
+            ctx.closePath();
+            ctx.fill();
+        }
+
+        function setRocketTarget(event) {
+            rocket.targetX = event.clientX;
+            rocket.targetY = event.clientY;
+        }
+
+        function moveRocket() {
+            let dx = rocket.targetX - rocket.x;
+            let dy = rocket.targetY - rocket.y;
+            let distance = Math.sqrt(dx * dx + dy * dy);
+            
+            if (distance > rocket.speed) {
+                rocket.x += dx / distance * rocket.speed;
+                rocket.y += dy / distance * rocket.speed;
+            } else {
+                rocket.x = rocket.targetX;
+                rocket.y = rocket.targetY;
+            }
+
+            drawRocket();
+            requestAnimationFrame(moveRocket);
+        }
+
+        moveRocket();
+    </script>
+</body>
+</html>
